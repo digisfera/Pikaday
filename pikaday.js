@@ -1116,7 +1116,10 @@
                 this.draw();
                 if (this._o.bound) {
                     addEvent(document, 'click', this._onClick);
-                    this.adjustPosition();
+                }
+                if (this._o.readjustPosition) {
+                    var adjust = this.adjustPosition.bind(this);
+                    this._adjustTimer = setInterval(adjust, 20);
                 }
                 if (typeof this._o.onOpen === 'function') {
                     this._o.onOpen.call(this);
@@ -1130,6 +1133,10 @@
             if (v !== false) {
                 if (this._o.bound) {
                     removeEvent(document, 'click', this._onClick);
+                }
+                if (this._o.readjustPosition) {
+                    clearInterval(this._adjustTimer);
+                    this._adjustTimer = null;
                 }
                 this.el.style.position = 'static'; // reset
                 this.el.style.left = 'auto';
